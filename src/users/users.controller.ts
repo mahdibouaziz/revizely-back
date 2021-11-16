@@ -1,6 +1,6 @@
 import {
   Controller,
-  Get,
+  // Get,
   Post,
   Body,
   // Patch,
@@ -9,15 +9,19 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './schemas/user.schema';
+import { AuthService } from 'src/auth/auth.service';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
-  @Post()
-  async register(@Body() user: User) {
-    console.log(user);
-    return await this.usersService.create(user);
+  @Post('auth/register')
+  async register(@Body() registerUserDto: RegisterUserDto) {
+    return await this.authService.register(registerUserDto);
   }
 
   // @Get()

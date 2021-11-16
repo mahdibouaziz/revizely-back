@@ -7,18 +7,14 @@ import { User, UserDocument } from './schemas/user.schema';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create(registerUserDto: User): Promise<User> {
-    const createdUser = await this.userModel.create(registerUserDto);
-    return createdUser;
-  }
-
   // findAll() {
   //   return `This action returns all users`;
   // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
+  async findOne(username: string): Promise<User> {
+    const user = await this.userModel.findOne({ username });
+    return user;
+  }
 
   // update(id: number, updateUserDto: UpdateUserDto) {
   //   return `This action updates a #${id} user`;
