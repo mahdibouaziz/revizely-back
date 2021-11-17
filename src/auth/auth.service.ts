@@ -1,16 +1,22 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { RegisterUserDto } from 'src/users/dto/register-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     // private userService: UsersService,
-    // private jwtService: JwtService,
+    private jwtService: JwtService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
@@ -58,10 +64,15 @@ export class AuthService {
 
   //login
 
-  //   async login(user: any) {
-  //     const payload = { username: user.username, sub: user.userId };
-  //     return {
-  //       access_token: this.jwtService.sign(payload),
-  //     };
-  //   }
+  async login(loginUserDto: LoginUserDto) {
+    const username = await this.validateUserPassword(loginUserDto);
+    if (username) {
+      const payload = { username };
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    }
+
+    throw new UnauthorizedException('Invalid Credentials');
+  }
 }
