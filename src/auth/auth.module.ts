@@ -15,6 +15,6 @@ import { jwtConstants } from './constants';
     }),
   ],
   providers: [AuthService],
-  exports: [AuthService],
+  exports: [AuthService, JwtModule, MongooseModule],
 })
 export class AuthModule {}
