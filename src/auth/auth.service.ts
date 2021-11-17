@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
@@ -49,21 +49,14 @@ export class AuthService {
       await this.userModel.create({ ...registerUserDto, salt, password });
       return { message: 'user has been created' };
     } catch (error) {
-      throw new ConflictException('Username already exists');
+      if (error.code == 11000) {
+        throw new ConflictException('Username already exists');
+      }
+      throw new HttpException(error._message, 400);
     }
   }
 
   //login
-
-  //   async validateUser(username: string, pass: string): Promise<any> {
-  //     const user: User = await this.userService.findOne(username);
-  //     if (user && user.password === pass) {
-  //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //       const { password, ...result } = user;
-  //       return result;
-  //     }
-  //     return null;
-  //   }
 
   //   async login(user: any) {
   //     const payload = { username: user.username, sub: user.userId };

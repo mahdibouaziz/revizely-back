@@ -7,17 +7,12 @@ import {
   // Param,
   // Delete,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { User } from './schemas/user.schema';
 import { AuthService } from 'src/auth/auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('auth/register')
   async register(@Body() registerUserDto: RegisterUserDto) {
